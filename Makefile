@@ -1,33 +1,16 @@
-.PHONY: dev format format-fix deps build test-infra test-service test deploy destroy
+.PHONY: format format-fix build deploy destroy
 PYTHON := ".venv/bin/python3"
 .ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
 
-dev:
-	poetry config --local virtualenvs.in-project true
-	poetry install --no-root --with dev
-
 format:
-	poetry run ruff check . --fix
+	uvx ruff check . --fix
 
 format-fix:
-	poetry run ruff format .
-
-deps:
-	poetry export --without-hashes --only=dev --format=requirements.txt > dev_requirements.txt
-	poetry export --without-hashes --without=dev --format=requirements.txt > lambda_requirements.txt
+	uvx ruff format .
 
 build:
 	mkdir -p .build/lambdas ; cp -r service .build/lambdas
-	mkdir -p .build/layers ; poetry export --without=dev --without-hashes --format=requirements.txt > .build/layers/requirements.txt
-
-test-infra: build
-	poetry run pytest -l -s --pdb tests/infrastructure
-
-test-service: build
-	poetry run pytest -l -s --pdb tests/service
-
-test:
-	poetry run pytest -l -s --pdb tests/
+	mkdir -p .build/layers ; uv export --frozen --no-emit-workspace --no-dev --no-editable -o .build/layers/requirements.txt
 
 deploy: build
 	npx cdk deploy --app="${PYTHON} ${PWD}/app.py" --require-approval=never

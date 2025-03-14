@@ -3,15 +3,14 @@ import os
 
 import aws_cdk as cdk
 
-from infrastructure.component import PythonDemoStack
-
-from infrastructure.utils import get_stack_name
+from infrastructure.component import TicketRoutingStack
+from infrastructure.constants import SERVICE_NAME
 
 app = cdk.App()
 
-PythonDemoStack(
+TicketRoutingStack(
     app,
-    get_stack_name(),
+    SERVICE_NAME,
     env=cdk.Environment(
         account=os.getenv("AWS_DEFAULT_ACCOUNT"), region=os.getenv("AWS_DEFAULT_REGION")
     ),

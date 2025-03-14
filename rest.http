@@ -1,0 +1,39 @@
+### REST API Documentation
+
+### Ticket Types
+@ticket_type_finance = finance
+@ticket_type_support = support
+@ticket_type_feedback = feedback
+
+### Common Messages
+@sample_message = Hello from API client
+
+### Retuen user tickets
+GET {{baseUrl}}/tickets
+Token: {{general_user_token}}
+
+###
+
+### POST a new ticket (general user)
+POST {{baseUrl}}/tickets
+Token: {{general_user_token}}
+Content-Type: application/json
+
+{
+  "message": "{{sample_message}} - General tier request",
+  "type": "{{ticket_type_finance}}"
+}
+
+###
+
+### POST a new ticket (gold user)
+POST {{baseUrl}}/tickets
+Token: {{gold_user_token}}
+Content-Type: application/json
+
+{
+  "message": "{{sample_message}} - Gold tier request",
+  "type": "{{ticket_type_finance}}"
+}
+
+###
