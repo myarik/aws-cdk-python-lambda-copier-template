@@ -160,7 +160,7 @@ class TicketRoutingStack(Stack):
         # All tickets
         topic.add_subscription(subs.SqsSubscription(analytics_queue))
 
-        # Only finance tickets for gold and silver customers
+        # Only gold tier tickets
         topic.add_subscription(
             subs.SqsSubscription(
                 priority_tickets_queue,
@@ -223,7 +223,7 @@ class TicketRoutingStack(Stack):
         )
         topic.grant_publish(api_to_sns_role)
 
-        # Create the POST method with SNS integration instead of Lambda integration
+        # Create the POST method with SNS integration
         api_resource.add_method(
             "POST",
             apigw.AwsIntegration(
