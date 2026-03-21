@@ -20,12 +20,12 @@ project_name:
 author_name:
   type: str
   help: Author name
-  default: Yaroslav Muravskyi
+  default: Author Name
 
 author_email:
   type: str
   help: Author email
-  default: yaroslav.muravskyi@myarik.com
+  default: developer@example.com
 
 copyright_holder:
   type: str
