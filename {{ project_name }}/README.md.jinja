@@ -1,0 +1,39 @@
+# {{ project_name }}
+
+AWS Lambda service built with Python and AWS CDK.
+
+## Setup
+
+```bash
+make dev       # Create venv & install dependencies
+```
+
+## Development
+
+```bash
+make lint      # Lint, format, and spell check
+make test      # Run all tests
+make build     # Build Lambda package
+```
+
+## Deploy
+
+```bash
+make deploy                       # Deploy all stacks
+make deploy-monitoring-dashboard  # Deploy monitoring only
+make destroy                      # Tear down all stacks
+```
+
+## Logs
+
+```bash
+ENVIRONMENT=dev LAMBDA=hello_lambda make logs
+```
+
+## Project Structure
+
+- `service/` — Lambda application code (handlers, models, logic)
+- `infrastructure/` — CDK stacks (Lambda, monitoring)
+- `tests/` — Infrastructure and service tests
+
+Run `make help` for all available commands.

@@ -1,0 +1,19 @@
+[project]
+name = "{{ project_name }}"
+version = "0.1.0"
+description = ""
+authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aws-lambda-powertools>=3.25.0",
+    "pydantic>=2.12.5",
+]
+
+[dependency-groups]
+dev = [
+    "aws-cdk-lib>=2.243.0",
+    "ruff>=0.15.6",
+    "pytest>=9.0.2",
+    "aws-cdk-aws-lambda-python-alpha>=2.243.0a0",
+]

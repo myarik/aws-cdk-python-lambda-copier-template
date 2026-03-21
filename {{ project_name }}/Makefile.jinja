@@ -1,0 +1,89 @@
+.ONESHELL:
+
+# Auto-documented help
+# https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+.PHONY: help
+help: ## Display this help screen
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+##@ Local Environment
+
+dev: ## Setup local development environment
+	uv venv --python 3.14
+	uv sync
+.PHONY: dev
+
+##@ Formatting
+
+check: ## Check code linting and fix
+	uvx ruff check --fix .
+.PHONY: check
+
+format: ## Format code
+	uvx ruff format .
+.PHONY: format
+
+spellcheck: ## Check for spelling errors in code
+	codespell --skip=".git,.venv,.build,cdk.out" -q 3 .
+.PHONY: spellcheck
+
+lint: check format spellcheck ## Lint code according to style guide
+.PHONY: lint
+
+##@ Testing
+
+test-infra: build ## Test infrastructure
+	uv run pytest -l -s --pdb tests/infrastructure
+.PHONY: test-infra
+
+test-service: build ## Test service
+	uv run pytest -l -s --pdb tests/service
+.PHONY: test-service
+
+test: build ## Run all tests
+	uv run pytest -l -s --pdb tests/
+.PHONY: test
+
+##@ Build
+
+clean: ## Remove build artifacts
+	rm -rf .build cdk.out
+.PHONY: clean
+
+build: ## Build the project
+	mkdir -p .build/lambdas ; cp -r service .build/lambdas
+	mkdir -p .build/layers ; uv export --frozen --no-emit-workspace --no-dev --no-editable -o .build/layers/requirements.txt
+.PHONY: build
+
+##@ Deploy
+
+deploy: build ## Build and deploy the project
+	npx cdk deploy --app="uv run python ${PWD}/app.py" --require-approval=never "{{ project_name }}--*"
+.PHONY: deploy
+
+deploy-monitoring-dashboard: ## Deploy monitoring dashboard
+	npx cdk deploy --app="uv run python ${PWD}/app.py" --require-approval=never "{{ project_name }}-monitoring--*"
+.PHONY: deploy-monitoring-dashboard
+
+destroy: ## Destroy all stacks
+	npx cdk destroy --app="uv run python ${PWD}/app.py" --force "{{ project_name }}-monitoring--*"
+	npx cdk destroy --app="uv run python ${PWD}/app.py" --force "{{ project_name }}--*"
+.PHONY: destroy
+
+##@ Lambda Logs
+
+logs: ## Get lambda logs (usage: ENVIRONMENT=prod LAMBDA=hello_lambda make logs)
+	aws logs filter-log-events \
+		--log-group-name "/aws/lambda/{{ project_name }}--$${ENVIRONMENT}-$${LAMBDA}" \
+		--start-time "$$(date -v -1d +%s000)" \
+		--query "events[*].{timestamp:timestamp,message:message}" \
+		--output json | \
+	jq 'sort_by(.timestamp) | \
+		map({ \
+			datetime: (.timestamp / 1000 | strftime("%Y-%m-%d %H:%M:%S")), \
+			content: (if (.message | startswith("{")) then \
+				try (.message | fromjson) catch .message \
+				else .message \
+				end) \
+		})'
+.PHONY: logs

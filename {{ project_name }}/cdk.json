@@ -1,0 +1,13 @@
+{
+  "app": "uv run python app.py",
+  "watch": {
+    "include": ["service/**", "infrastructure/**"],
+    "exclude": [
+      "service/**/*.pyc",
+      "service/**/__pycache__",
+      "infrastructure/**/*.pyc",
+      "infrastructure/**/__pycache__"
+    ]
+  },
+  "progress": "bar"
+}
