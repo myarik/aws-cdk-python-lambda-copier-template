@@ -51,8 +51,9 @@ You'll be prompted for:
 | Prompt | Description | Default |
 |--------|-------------|---------|
 | `project_name` | Project/service name | `my-lambda-service` |
-| `author_name` | Author name | — |
-| `author_email` | Author email | — |
+| `project_description` | Short project description | `AWS Lambda service built with Python and AWS CDK` |
+| `author_name` | Author name | `Your Name` |
+| `author_email` | Author email | `your@email.com` |
 | `copyright_holder` | Copyright holder | author name |
 | `copyright_date` | Copyright year | `2026` |
 | `copyright_license` | License type | `MIT` |

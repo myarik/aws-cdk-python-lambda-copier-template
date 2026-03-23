@@ -17,15 +17,20 @@ project_name:
   help: Project/service name
   default: my-lambda-service
 
+project_description:
+  type: str
+  help: Short project description
+  default: "AWS Lambda service built with Python and AWS CDK"
+
 author_name:
   type: str
   help: Author name
-  default: Author Name
+  default: Your Name
 
 author_email:
   type: str
   help: Author email
-  default: developer@example.com
+  default: your@email.com
 
 copyright_holder:
   type: str
