@@ -2,6 +2,8 @@
 
 A [Copier](https://copier.readthedocs.io/) template for production-ready AWS Lambda services built with Python and AWS CDK.
 
+<img alt="AWS Lambda Template" src="assets/demo.gif" width="600" />
+
 ## Features
 
 - Python 3.14 Lambda with dependency Layer
