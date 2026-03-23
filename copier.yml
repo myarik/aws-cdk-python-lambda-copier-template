@@ -1,4 +1,5 @@
 _templates_suffix: .jinja
+_subdirectory: template
 _exclude:
   - copier.yml
   - .git
